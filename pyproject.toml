@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "juquis-ecommerce"
+version = "0.1.0"
+description = ""
+authors = ["Ricardo Juarez <rjuarezq@gmail.com>"]
+readme = "README.md"
+packages = [{include = "juquis_ecommerce"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "3.1.6"
+djangorestframework = "3.12.2"
+django-model-utils = "4.0.0"
+factory-boy = "3.2.1"
+pytest-django = "^4.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
