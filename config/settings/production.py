@@ -1,3 +1,4 @@
+from config.settings.base import *
 from config.settings.base import ROOT_DIR
 
 # SECURITY WARNING: don't run with debug turned on in production!
