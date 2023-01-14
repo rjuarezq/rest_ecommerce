@@ -1,5 +1,3 @@
-import os
-
 from environ import Env, Path
 
 ROOT_DIR = Path(__file__) - 3
@@ -35,6 +33,7 @@ BASE_APPS = [
 
 LOCAL_APPS = [
     "product_app",
+    "user_profile",
 ]
 
 THIRD_APPS = [
@@ -91,6 +90,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+]
+
+# specify the custom model as the default user model
+# https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#authentication-backends:~:text=Finally%2C%20specify%20the,%27customauth.MyUser%27
+AUTH_USER_MODEL = "user_profile.UserProfile"
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -113,3 +125,16 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ]
 }
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
