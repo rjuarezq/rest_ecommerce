@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "juquis-ecommerce"
+requires-python = "3.10.4"
 version = "0.1.0"
 description = ""
 authors = ["Ricardo Juarez <rjuarezq@gmail.com>"]
@@ -21,14 +22,31 @@ django = "3.2"
 djangorestframework = "3.12.2"
 django-model-utils = "4.0.0"
 django-environ = "^0.9.0"
+django-cryptography = "^1.1"
+argon2-cffi = "^21.3.0"
+djangorestframework-simplejwt = "^5.2.2"
+responses = "^0.22.0"
 
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.10.1"
 black = { extras = ["d"], version = "^22.10.0" }
-factory-boy = "3.2.1"
-pytest-django = "^4.5.2"
 
+[tool.poetry.group.test.dependencies]
+pytest-django = "^4.5.2"
+factory-boy = "^3.2.1"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+django_find_project = true
+django_debug_mode = "keep"
+addopts = "--reuse-db -s"
+filterwarnings = [
+    "ignore::DeprecationWarning:pysnmp",
+    "ignore::DeprecationWarning:kombu",
+    "ignore::DeprecationWarning:django",
+    "ignore::DeprecationWarning:model",
+]
 
 [build-system]
 requires = ["poetry-core"]
