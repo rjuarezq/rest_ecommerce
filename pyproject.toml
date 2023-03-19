@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "juquis-ecommerce"
-requires-python = "3.10.4"
 version = "0.1.0"
 description = ""
 authors = ["Ricardo Juarez <rjuarezq@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "juquis_ecommerce" }]
+
+[project]
+requires-python = ">=3.10.4"
 
 [tool.isort]
 profile = "black"
