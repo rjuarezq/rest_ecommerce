@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView
 
 from common.views import AuthenticatedView
 from user_profile.api.serializers import UserCreateSerializer, UserSerializer
@@ -11,4 +11,9 @@ class UserCreateAPIView(CreateAPIView):
 
 class UserListAPIView(AuthenticatedView, ListAPIView):
     serializer_class = UserSerializer
+    queryset = UserProfile.objects.filter(is_active=True)
+
+
+class UserRetrieveUpdateAPIView(AuthenticatedView, RetrieveUpdateAPIView):
+    serializer_class = UserCreateSerializer
     queryset = UserProfile.objects.filter(is_active=True)
