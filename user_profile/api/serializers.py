@@ -28,3 +28,9 @@ class UserCreateSerializer(ModelSerializer):
         instance.password = PasswordHasher().hash(instance.password)
         instance.save()
         return instance
+
+
+class UserTokenSerializer(ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["username", "email", "first_name", "last_name"]

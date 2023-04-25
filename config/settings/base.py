@@ -29,6 +29,7 @@ BASE_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework.authtoken",
 ]
 
 LOCAL_APPS = [
@@ -102,6 +103,9 @@ PASSWORD_HASHERS = [
 # https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#authentication-backends:~:text=Finally%2C%20specify%20the,%27customauth.MyUser%27
 AUTH_USER_MODEL = "user_profile.UserProfile"
 
+# TIME TO EXPIRES A TOKEN
+# https://stackoverflow.com/questions/14567586/how-to-set-token-expiration-time-in-django-rest-framework
+TOKEN_EXPIRED_AFTER_SECONDS = 900  # 15 minutes
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -117,24 +121,4 @@ USE_L10N = True
 USE_TZ = True
 
 # django-rest-framework
-# -------------------------------------------------------------------------------
-# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-        "rest_framework.authentication.SessionAuthentication",
-    ]
-}
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-}
-
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
