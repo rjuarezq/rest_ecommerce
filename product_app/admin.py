@@ -8,3 +8,8 @@ from product_app.models import CategoryProduct, Product
 @register(Product)
 class ProductAdmin(ModelAdmin):
     list_display = ("name", "price", "quantity")
+
+
+@register(CategoryProduct)
+class CategoryProductAdmin(ModelAdmin):
+    list_display = ["name"]

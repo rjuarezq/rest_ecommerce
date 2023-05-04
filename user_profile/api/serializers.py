@@ -18,3 +18,19 @@ class UserCreateSerializer(ModelSerializer):
 
     password = CharField(style={"input_type": "password"})
     email = EmailField(required=True)
+
+    def create(self, validated_data):
+        validated_data["password"] = PasswordHasher().hash(validated_data["password"])
+        return UserProfile.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.password = validated_data.get("password", instance.password)
+        instance.password = PasswordHasher().hash(instance.password)
+        instance.save()
+        return instance
+
+
+class UserTokenSerializer(ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["username", "email", "first_name", "last_name"]

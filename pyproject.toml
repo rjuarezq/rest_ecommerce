@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "juquis-ecommerce"
-requires-python = "3.10.4"
 version = "0.1.0"
 description = ""
 authors = ["Ricardo Juarez <rjuarezq@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "juquis_ecommerce" }]
+
+[project]
+requires-python = ">=3.10.4"
 
 [tool.isort]
 profile = "black"
@@ -26,11 +28,13 @@ django-cryptography = "^1.1"
 argon2-cffi = "^21.3.0"
 djangorestframework-simplejwt = "^5.2.2"
 responses = "^0.22.0"
+pillow = "^9.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.10.1"
 black = { extras = ["d"], version = "^22.10.0" }
+drf-yasg = "^1.21.5"
 
 [tool.poetry.group.test.dependencies]
 pytest-django = "^4.5.2"
