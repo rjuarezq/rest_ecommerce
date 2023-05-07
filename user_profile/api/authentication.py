@@ -2,16 +2,18 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.utils import timezone
-from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.response import Response
 
 
 class ExpireTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
-        self.token = self.get_model().objects.select_related("user").get(key=key)
-        self.token = self.get_or_regenerate_token()
-        return (self.token.user, self.token)
+        self.token = None
+        try:
+            self.token = self.get_model().objects.select_related("user").get(key=key)
+            self.token = self.get_or_regenerate_token()
+        except self.get_model().DoesNotExist:
+            pass
+        return self.token
 
     def get_or_regenerate_token(self):
         if self.is_token_expired():

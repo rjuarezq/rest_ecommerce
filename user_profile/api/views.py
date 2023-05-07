@@ -91,17 +91,10 @@ class Logout(GenericAPIView):
         )
 
 
-class TokenRetrieveAPIView(RetrieveAPIView):
+class TokenRetrieveAPIView(Authentication, RetrieveAPIView):
     def get(self, request, *args, **kwargs):
-        username = request.GET.get("username")
-        try:
-            current_token = Token.objects.select_related("user").get(user__username=username)
-        except Token.DoesNotExist:
-            return Response(
-                data={"message": "Username does not exist"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        return Response({"token": current_token.key})
+        token = Token.objects.select_related("user").get(user__username=self.user.username)
+        return Response({"token": token.key})
 
 
 def _delete_current_sessions(all_sessions: Session, user):
