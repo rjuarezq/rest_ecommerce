@@ -2,33 +2,32 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.response import Response
 
 
 class ExpireTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
-        try:
-            token = self.get_model().Objects.select_related("user").get(key=self.token)
-        except self.get_model().DoesNotExist:
-            raise AuthenticationFailed(_("Invalid token."))
-        if not token.user.is_active:
-            raise AuthenticationFailed(_("User inactive or deleted."))
-        if self.token_expired_handler(token):
-            raise AuthenticationFailed(_("The Token is expired."))
-        return (token.user, token)
+        self.token = self.get_model().objects.select_related("user").get(key=key)
+        self.token = self.get_or_regenerate_token()
+        return (self.token.user, self.token)
 
-    def token_expired_handler(self, token):
-        is_expired = self.is_token_expired(token)
-        if is_expired:
-            ...
-        return is_expired
+    def get_or_regenerate_token(self):
+        if self.is_token_expired():
+            return self.refresh_token()
+        return self.token
 
-    def is_token_expired(self, token) -> bool:
-        return self.token_expires_in(token) < timedelta(seconds=0)
+    def is_token_expired(self) -> bool:
+        return self.token_expires_in() < timedelta(seconds=0)
 
-    def token_expires_in(self, token) -> timedelta:
-        time_elapsed = timezone.now() - token.created
+    def token_expires_in(self) -> timedelta:
+        time_elapsed = timezone.now() - self.token.created
         time_left = timedelta(seconds=settings.TOKEN_EXPIRED_AFTER_SECONDS) - time_elapsed
         return time_left
+
+    def refresh_token(self):
+        user = self.token.user
+        self.token.delete()
+        token = self.get_model().objects.create(user=user)
+        return token
