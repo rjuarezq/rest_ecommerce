@@ -6,6 +6,7 @@ from user_profile.api.views import (
     UserCreateAPIView,
     UserListAPIView,
     UserRetrieveUpdateAPIView,
+    TokenRetrieveAPIView,
 )
 
 app_name = "user_profile"
@@ -15,4 +16,5 @@ urlpatterns = [
     path("update/<uuid:pk>/", UserRetrieveUpdateAPIView.as_view(), name="edit-user"),
     path("login/", Login.as_view(), name="login"),
     path("logout/", Logout.as_view(), name="logout"),
+    path("refresh-token/", TokenRetrieveAPIView.as_view(), name="refresh-token"),
 ]
