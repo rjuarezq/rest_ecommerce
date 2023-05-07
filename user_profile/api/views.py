@@ -8,6 +8,7 @@ from rest_framework.generics import (
     CreateAPIView,
     GenericAPIView,
     ListAPIView,
+    RetrieveAPIView,
     RetrieveUpdateAPIView,
 )
 from rest_framework.response import Response
@@ -20,12 +21,14 @@ from user_profile.api.serializers import (
 )
 from user_profile.models import UserProfile
 
+from .authentication_mixins import Authentication
+
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
 
 
-class UserListAPIView(AuthenticatedView, ListAPIView):
+class UserListAPIView(Authentication, ListAPIView):
     serializer_class = UserSerializer
     queryset = UserProfile.objects.filter(is_active=True)
 
@@ -86,6 +89,19 @@ class Logout(GenericAPIView):
             data={"message": "Token deleted"},
             status=status.HTTP_200_OK,
         )
+
+
+class TokenRetrieveAPIView(RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        username = request.GET.get("username")
+        try:
+            current_token = Token.objects.select_related("user").get(user__username=username)
+        except Token.DoesNotExist:
+            return Response(
+                data={"message": "Username does not exist"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response({"token": current_token.key})
 
 
 def _delete_current_sessions(all_sessions: Session, user):
