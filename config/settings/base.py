@@ -5,6 +5,12 @@ ROOT_DIR = Path(__file__) - 3
 env = Env(
     SECRET_KEY=(str, "DJANGO_SECRET_KEY"),
     DEBUG=(bool, False),
+    CELERY_USER=(str, "guest"),
+    CELERY_PASSWORD=(str, "guest"),
+    CELERY_HOST=(str, "localhost"),
+    CELERY_PORT=(int, 5672),
+    CELERY_DATABASE=(str, "celery"),
+    CELERY_BROKER_FAKE=(bool, False),
 )
 
 # GENERAL
@@ -129,3 +135,20 @@ AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING_STREAMHANDLER = "logging.StreamHandler"
+
+# CELERY
+# ------------------------------------------------------------------------------
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
+CELERY_USER = env("CELERY_USER")
+CELERY_PASSWORD = env("CELERY_PASSWORD")
+CELERY_HOST = env("CELERY_HOST")
+CELERY_PORT = env("CELERY_PORT")
+CELERY_DATABASE = env("CELERY_DATABASE")
+CELERY_BROKER_URL = (
+    f"pyamqp://{CELERY_USER}:{CELERY_PASSWORD}@{CELERY_HOST}:{CELERY_PORT}/{CELERY_DATABASE}"
+)
+
+# CELERY - EXTRA OPTIONS
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
+CELERY_WORKER_SEND_TASK_EVENTS = True
+CELERY_TASK_SEND_SENT_EVENT = True
