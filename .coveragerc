@@ -1,0 +1,16 @@
+[run]
+branch = True
+omit =
+     */tests*
+     */migrations/*
+     *__init__.py*
+     */settings/*
+     *wsgi.py*
+     *admin.py*
+     *urls.py*
+     *apps.py*
+
+[report]
+exclude_lines =
+     pragma: no cover
+     def __str__

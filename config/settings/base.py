@@ -39,6 +39,7 @@ LOCAL_APPS = [
 
 THIRD_APPS = [
     "rest_framework",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
@@ -122,3 +123,9 @@ USE_TZ = True
 
 # django-rest-framework
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+# LOGGING
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# See https://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING_STREAMHANDLER = "logging.StreamHandler"

@@ -29,6 +29,7 @@ argon2-cffi = "^21.3.0"
 djangorestframework-simplejwt = "^5.2.2"
 responses = "^0.22.0"
 pillow = "^9.5.0"
+celery = "^5.2.7"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,6 +40,7 @@ drf-yasg = "^1.21.5"
 [tool.poetry.group.test.dependencies]
 pytest-django = "^4.5.2"
 factory-boy = "^3.2.1"
+coverage = "^7.2.5"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
