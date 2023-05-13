@@ -11,6 +11,11 @@ env = Env(
     CELERY_PORT=(int, 5672),
     CELERY_DATABASE=(str, "celery"),
     CELERY_BROKER_FAKE=(bool, False),
+    SMTP_HOST=(str, "smtp.gmail.com"),
+    SMTP_PORT=(int, 1234),
+    SMTP_USERNAME=(str, "username@yourcorporation.com"),
+    SMTP_PASSWORD=(str, "yourpassword"),
+    TEMPLATE_ROOT_PATH=(str, str(ROOT_DIR("templates"))),
 )
 
 # GENERAL
@@ -65,7 +70,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [env("TEMPLATE_ROOT_PATH")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -152,3 +157,7 @@ CELERY_BROKER_URL = (
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
 CELERY_WORKER_SEND_TASK_EVENTS = True
 CELERY_TASK_SEND_SENT_EVENT = True
+
+
+# EMAIL - SMTP
+SMTP_USERNAME = env("SMTP_USERNAME")
