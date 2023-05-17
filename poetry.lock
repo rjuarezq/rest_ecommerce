@@ -750,6 +750,21 @@ docs = ["furo (>=2021.8.17b43,<2021.9.0)", "sphinx (>=3.5.0)", "sphinx-notfound-
 testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
 
 [[package]]
+name = "django-magic-link"
+version = "0.5.1"
+description = "Django app for managing tokenised 'magic link' logins."
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "django-magic-link-0.5.1.tar.gz", hash = "sha256:a2e43d0a0d722ca428dc32c109776fc28df3340568366402852f89f8a6137105"},
+    {file = "django_magic_link-0.5.1-py3-none-any.whl", hash = "sha256:23d603476ee45c91f5f0215ef47098d11c4f19fd182c9fb15cf348650e78d3f0"},
+]
+
+[package.dependencies]
+django = ">=2.2,<5.0"
+
+[[package]]
 name = "django-model-utils"
 version = "4.0.0"
 description = "Django model mixins and utilities"
@@ -1810,4 +1825,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "25f85388f63b32b3f978e76e68a7246074aaf112144a21099614073b0b57e1e7"
+content-hash = "acf1ec3ca848dd7ee0b5986f65d170b6a93f83a9610ce7db9f6f82ae80cfd4e5"

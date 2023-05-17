@@ -60,7 +60,7 @@ class UserProfile(AbstractBaseUser):
     image_profile = ImageField(
         verbose_name="Imagen de perfil", upload_to="user_profile/", blank=True, null=True
     )
-    is_active = BooleanField(verbose_name="Activo", default=True)
+    is_active = BooleanField(verbose_name="Activo", default=False)
     is_staff = BooleanField(verbose_name="Administrador", default=False)
     is_superuser = BooleanField(verbose_name="Super Usuario", default=False)
     date_joined = DateTimeField(verbose_name="Fecha de registro", default=timezone.now)
