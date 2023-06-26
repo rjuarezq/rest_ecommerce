@@ -18,6 +18,7 @@ from user_profile.api.serializers import (
     UserCreateSerializer,
     UserSerializer,
     UserTokenSerializer,
+    UserVerificationSerializer,
 )
 from user_profile.models import UserProfile
 
@@ -102,3 +103,18 @@ def _delete_current_sessions(all_sessions: Session, user):
         session_data = session.get_decoded()
         if str(user.pk) == session_data.get("_auth_user_id"):
             session.delete()
+
+
+class UserVerificationGenericAPIView(GenericAPIView):
+    queryset = UserProfile.objects.filter(is_active=False)
+    serializer_class = UserVerificationSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = serializer = self.get_serializer(data={"uuid": kwargs.get("pk")})
+        serializer.is_valid(raise_exception=True)
+        instance = self.get_object()
+        instance._activate()
+        return Response(
+            data={"message": "User activated"},
+            status=status.HTTP_200_OK,
+        )

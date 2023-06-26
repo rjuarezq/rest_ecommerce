@@ -97,3 +97,7 @@ class UserProfile(AbstractBaseUser):
             "is_staff": self.is_staff,
             "is_superuser": self.is_superuser,
         }
+
+    def _activate(self):
+        self.is_active = True
+        self.save()

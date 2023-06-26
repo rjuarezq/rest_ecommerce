@@ -9,6 +9,7 @@ from user_profile.api.views import (
     UserCreateAPIView,
     UserListAPIView,
     UserRetrieveUpdateAPIView,
+    UserVerificationGenericAPIView,
 )
 
 app_name = "user_profile"
@@ -20,4 +21,5 @@ urlpatterns = [
     path("logout/", Logout.as_view(), name="logout"),
     path("refresh-token/", TokenRetrieveAPIView.as_view(), name="refresh-token"),
     path("magic_link/", include(magic_link_urls)),
+    path("verify/<uuid:pk>", UserVerificationGenericAPIView.as_view(), name="verification"),
 ]

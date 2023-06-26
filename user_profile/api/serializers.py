@@ -1,6 +1,9 @@
-from argon2 import PasswordHasher
-from django.core.signing import Signer
-from rest_framework.serializers import CharField, EmailField, ModelSerializer
+from django.contrib.auth.hashers import make_password
+from rest_framework.serializers import (
+    ModelSerializer,
+    Serializer,
+    UUIDField,
+)
 
 from user_profile.models import UserProfile
 
@@ -15,17 +18,18 @@ class UserCreateSerializer(ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ["first_name", "last_name", "email", "username", "password"]
-
-    password = CharField(style={"input_type": "password"})
-    email = EmailField(required=True)
+        extra_kwargs = {
+            "password": {"style": {"input_type": "password"}}
+        }
 
     def create(self, validated_data):
-        validated_data["password"] = PasswordHasher().hash(validated_data["password"])
-        return UserProfile.objects.create(**validated_data)
+        password = validated_data.pop("password")
+        validated_data["password"] = make_password(password, hasher="argon2")
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         instance.password = validated_data.get("password", instance.password)
-        instance.password = PasswordHasher().hash(instance.password)
+        instance.password = make_password(instance.password, hasher="argon2")
         instance.save()
         return instance
 
@@ -34,3 +38,7 @@ class UserTokenSerializer(ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ["username", "email", "first_name", "last_name"]
+
+
+class UserVerificationSerializer(Serializer):
+    uuid = UUIDField(read_only=True)
