@@ -1,6 +1,4 @@
-from django import urls
-from django.urls import include, path
-from magic_link import urls as magic_link_urls
+from django.urls import path
 
 from user_profile.api.views import (
     Login,
@@ -20,6 +18,5 @@ urlpatterns = [
     path("login/", Login.as_view(), name="login"),
     path("logout/", Logout.as_view(), name="logout"),
     path("refresh-token/", TokenRetrieveAPIView.as_view(), name="refresh-token"),
-    path("magic_link/", include(magic_link_urls)),
-    path("verify/<uuid:pk>", UserVerificationGenericAPIView.as_view(), name="verification"),
+    path("verify/<str:pk>", UserVerificationGenericAPIView.as_view(), name="user-verification"),
 ]

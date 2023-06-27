@@ -14,6 +14,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 
 from common.views import AuthenticatedView
+from user_profile.api.authentication import ExpireTokenAuthentication
 from user_profile.api.serializers import (
     UserCreateSerializer,
     UserSerializer,
@@ -106,15 +107,39 @@ def _delete_current_sessions(all_sessions: Session, user):
 
 
 class UserVerificationGenericAPIView(GenericAPIView):
-    queryset = UserProfile.objects.filter(is_active=False)
+    queryset = Token.objects.all()
     serializer_class = UserVerificationSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = serializer = self.get_serializer(data={"uuid": kwargs.get("pk")})
+        token_id = kwargs.get("pk")
+        serializer = self.get_serializer(data={"key": token_id})
         serializer.is_valid(raise_exception=True)
-        instance = self.get_object()
-        instance._activate()
+
+        if not self.is_token_exists(token_id):
+            return Response(
+                data={"message": "The token for activation does not exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        token = self.get_object()
+        if self.is_token_expired(token):
+            return Response(
+                data={"message": "Link expired"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        self.del_token_and_active_user(token)
         return Response(
             data={"message": "User activated"},
             status=status.HTTP_200_OK,
         )
+
+    def is_token_expired(self, token: Token) -> bool:
+        token_manager = ExpireTokenAuthentication()
+        token_manager.token = token
+        return token_manager.is_token_expired()
+
+    def is_token_exists(self, token: str) -> bool:
+        return Token.objects.filter(key=token).exists()
+
+    def del_token_and_active_user(self, token: Token):
+        token.delete()
+        token.user._activate()

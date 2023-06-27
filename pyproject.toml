@@ -30,7 +30,6 @@ djangorestframework-simplejwt = "^5.2.2"
 responses = "^0.22.0"
 pillow = "^9.5.0"
 celery = "^5.2.7"
-django-magic-link = "^0.5.1"
 
 
 [tool.poetry.group.dev.dependencies]
