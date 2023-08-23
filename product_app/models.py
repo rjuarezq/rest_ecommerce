@@ -1,7 +1,9 @@
 from django.db.models import (
-    PROTECT,
+    CASCADE,
+    BooleanField,
     CharField,
     DecimalField,
+    FloatField,
     ForeignKey,
     Index,
     IntegerField,
@@ -10,21 +12,9 @@ from django.db.models import (
 from model_utils.fields import UUIDField
 from model_utils.models import TimeStampedModel
 
+from .constants import _CLASS_CATEGORY, CATEGORY_STANDARD
+
 PREFIX = "TB_"
-
-
-class CategoryProduct(TimeStampedModel):
-    class Meta:
-        db_table = PREFIX + "CATEGORY_PRODUCTS"
-        verbose_name = "Categoria"
-        verbose_name_plural = "Categorias"
-        ordering = ["name"]
-
-    uuid = UUIDField(primary_key=True, version=4, editable=False)
-    name = CharField(verbose_name="Nombre", max_length=200, blank=False)
-
-    def __str__(self) -> str:
-        return f"{self.name} | {self.uuid}"
 
 
 class Product(TimeStampedModel):
@@ -39,11 +29,29 @@ class Product(TimeStampedModel):
     description = TextField(verbose_name="Descripcion", default="", blank=True)
     price = DecimalField(verbose_name="Precio", max_digits=10, decimal_places=2, default=0.00)
     quantity = IntegerField(verbose_name="Cantidad", blank=False, null=False)
+    size = FloatField(verbose_name="Tamaño", blank=True, null=True)
+    enabled = BooleanField(verbose_name="Habilitado", default=True)
     category = ForeignKey(
-        CategoryProduct,
-        on_delete=PROTECT,
-        blank=False,
-        null=False,
-        verbose_name="Categoria",
-        default="4e5d2e47-9e7b-4c5f-b673-20724866c74b",
+        "Category", verbose_name="Categoria", on_delete=CASCADE, related_name="products"
     )
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Category(TimeStampedModel):
+    class Meta:
+        db_table = PREFIX + "CATEGORIES"
+        verbose_name = "Categoria"
+        verbose_name_plural = "Categorias"
+        ordering = ["name"]
+
+    uuid = UUIDField(primary_key=True, version=4, editable=False)
+    name = CharField(verbose_name="Nombre", max_length=200, blank=False)
+    enabled = BooleanField(verbose_name="Habilitado", default=True)
+    class_category = CharField(
+        verbose_name="Clase", max_length=20, choices=_CLASS_CATEGORY, default=CATEGORY_STANDARD
+    )
+
+    def __str__(self) -> str:
+        return self.name
